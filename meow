@@ -1,0 +1,205 @@
+import time
+import random
+
+def print_slow(text):
+    for char in text:
+        print(char, end="", flush=True)
+        time.sleep(0.03)
+    print()
+
+def introduction():
+    print("""
+    ███████╗ ██████╗ ██████╗ ██╗   ██╗███████╗██╗███████╗
+    ██╔════╝██╔═══██╗██╔══██╗██║   ██║██╔════╝██║██╔════╝
+    █████╗  ██║   ██║██████╔╝██║   ██║█████╗  ██║███████╗
+    ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝  ██║╚════██║
+    ███████╗╚██████╔╝██████╔╝╚██████╔╝███████╗██║███████║
+    ╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚══════╝
+    """
+    )
+    print_slow("You are Odysseus, the legendary hero of Ithaca. After the Trojan War, you embark on a perilous journey home.")
+    print_slow("Your wits, courage, and leadership will be tested. Will you survive the trials and return to Ithaca?")
+
+# Game Over Function
+def game_over(reason):
+    print_slow(f"\nGame Over. {reason}")
+    exit()
+
+# Ithaca Victory Function
+def ithaca():
+    print_slow("After years of trials and hardships, you finally reach Ithaca, your beloved homeland.")
+    print_slow("Your family and people welcome you with joy and relief. You have triumphed, Odysseus.")
+    print("""
+    ██████╗ ██╗   ██╗███████╗    ███████╗ ██████╗ ██████╗ ███████╗
+    ██╔══██╗██║   ██║██╔════╝    ██╔════╝██╔═══██╗██╔══██╗██╔════╝
+    ██████╔╝██║   ██║█████╗      █████╗  ██║   ██║██████╔╝███████╗
+    ██╔═══╝ ██║   ██║██╔══╝      ██╔══╝  ██║   ██║██╔═══╝ ╚════██║
+    ██║     ╚██████╔╝███████╗    ██║     ╚██████╔╝██║     ███████║
+    ╚═╝      ╚═════╝ ╚══════╝    ╚═╝      ╚═════╝ ╚═╝     ╚══════╝
+    """
+    )
+    exit()
+
+# Inventory and Crew Management
+inventory = []
+crew_morale = 100
+skills = {"Strength": 5, "Intelligence": 5, "Charisma": 5}
+
+def update_morale(change):
+    global crew_morale
+    crew_morale += change
+    if crew_morale <= 0:
+        game_over("Your crew has mutinied or abandoned you.")
+    print_slow(f"Crew morale is now {crew_morale}.")
+
+def update_skills(skill, change):
+    if skill in skills:
+        skills[skill] += change
+        print_slow(f"Your {skill} skill is now {skills[skill]}.")
+
+# Cyclops Encounter
+def cyclops():
+    print("""
+     O------|
+      /\   \\
+     /  \   \\
+    /____\   0---|
+    """
+    )
+    print("\nYou encounter Polyphemus, the fearsome Cyclops. He traps you and your crew in his cave.")
+    choice = input("Do you (1) try to fight him, (2) devise a clever plan, or (3) offer him wine? ")
+
+    if choice == "1":
+        print_slow("Polyphemus is too strong. You are defeated.")
+        game_over("You underestimated the Cyclops.")
+    elif choice == "2":
+        if skills["Intelligence"] >= 6:
+            print_slow("Using your wits, you blind Polyphemus and escape the cave. Well done.")
+            update_morale(10)
+        else:
+            print_slow("Your clever plan fails. Polyphemus catches you.")
+            game_over("You lacked the intelligence to outwit the Cyclops.")
+    elif choice == "3":
+        print_slow("You offer Polyphemus wine, and he falls asleep. You blind him while he is unconscious and escape.")
+        inventory.append("Cyclops' Favor")
+        update_skills("Charisma", 1)
+        update_morale(15)
+    else:
+        print("Invalid choice.")
+        cyclops()
+
+# Sirens Encounter
+def sirens():
+    print("""
+       ~~~~~  ~~~~
+     ~~~~  ~~~~     ~~~~
+      ~~~~~  ~~~~    ~~~~
+      ~~~~~      ~~~~   
+      """
+    )
+    print("\nYou sail past the island of the Sirens, whose enchanting songs lure sailors to their doom.")
+    choice = input("Do you (1) plug your crew's ears with wax, (2) tie yourself to the mast, or (3) attempt to sing louder than the Sirens? ")
+
+    if choice == "1":
+        print_slow("Your crew sails safely past the Sirens. You resist the temptation. Well done.")
+        update_morale(10)
+    elif choice == "2":
+        if skills["Strength"] >= 6:
+            print_slow("You hear the Sirens' song but resist. Your crew follows your lead and escapes unharmed.")
+            update_morale(5)
+        else:
+            print_slow("The ropes fail, and you succumb to the Sirens' song.")
+            game_over("Your lack of strength led to your downfall.")
+    elif choice == "3":
+        print_slow("Your attempt to out-sing the Sirens fails, and your ship crashes on the rocks.")
+        game_over("You fell victim to the Sirens' trap.")
+    else:
+        print("Invalid choice.")
+        sirens()
+
+# Scylla and Charybdis Encounter
+def scylla_charybdis():
+    print("""
+          ,~~.
+          ,'. .' .--""""`--.,.
+       ", ~@  \_
+          ' ||` "
+    """
+    )
+    print("\nYou approach a narrow strait. On one side is Scylla, a monstrous six-headed beast. On the other is Charybdis, a deadly whirlpool.")
+    choice = input("Do you (1) sail closer to Scylla, (2) risk Charybdis, or (3) attempt to bribe the gods for safe passage? ")
+
+    if choice == "1":
+        print_slow("Scylla takes some of your men, but your ship survives. You press on.")
+        update_morale(-20)
+    elif choice == "2":
+        print_slow("Charybdis swallows your entire ship. You are lost.")
+        game_over("You chose the more dangerous path.")
+    elif choice == "3":
+        if "Cyclops' Favor" in inventory:
+            print_slow("The gods accept your offering. You pass through safely.")
+        else:
+            print_slow("The gods are not pleased with your lack of offerings. You are caught by Charybdis.")
+            game_over("The gods did not favor you.")
+    else:
+        print("Invalid choice.")
+        scylla_charybdis()
+
+# Island of Helios Encounter
+def helios():
+    print("""
+   _ _ _ _..--\_/--.._ _ _
+          --//     ~~~    ~~~ \---.
+    """
+    )
+    print("\nYou land on the island of Helios, the Sun God. Your men are starving.")
+    choice = input("Do you (1) forbid your crew from eating the sacred cattle, (2) allow them to feast, or (3) pray for guidance? ")
+
+    if choice == "1":
+        print_slow("Though hungry, you leave the island unharmed. Helios does not punish you. Well done.")
+        update_morale(-10)
+    elif choice == "2":
+        print_slow("Helios is enraged and destroys your ship. You are cast adrift.")
+        game_over("You angered the Sun God.")
+    elif choice == "3":
+        print_slow("The gods hear your prayers and provide sustenance. You leave the island safely.")
+        update_skills("Intelligence", 1)
+        update_morale(10)
+    else:
+        print("Invalid choice.")
+        helios()
+
+# Additional Random Events
+def random_event():
+    events = [
+        "A storm approaches. You lose supplies and morale.",
+        "You find a friendly island where the locals provide food and rest.",
+        "Pirates attack your ship! You fend them off but lose some crew members.",
+        "The gods send you a favorable wind, speeding up your journey.",
+    ]
+    event = random.choice(events)
+    print_slow(f"\nRandom Event: {event}")
+    if "storm" in event:
+        update_morale(-15)
+    elif "friendly island" in event:
+        update_morale(20)
+    elif "Pirates" in event:
+        update_morale(-10)
+        update_skills("Strength", 1)
+    elif "favorable wind" in event:
+        update_morale(10)
+
+# Main Game Function
+def main():
+    introduction()
+    cyclops()
+    random_event()
+    sirens()
+    random_event()
+    scylla_charybdis()
+    random_event()
+    helios()
+    ithaca()
+
+if __name__ == "__main__":
+    main()
